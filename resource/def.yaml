@@ -1,0 +1,140 @@
+storages:
+- name: BmMarketDimensionStorage
+  method: NewMarketDimensionStorage
+  daemons:
+  - BmMongodbDaemon
+- name: BmProductDimensionStorage
+  method: NewProductDimensionStorage
+  daemons:
+  - BmMongodbDaemon
+
+resources:
+- name: BmMarketDimensionResource
+  method: NewMarketDimensionResource
+  storages:
+  - BmMarketDimensionStorage
+- name: BmProductDimensionResource
+  method: NewProductDimensionResource
+  storages:
+  - BmProductDimensionStorage
+
+models:
+- MarketDimension
+- ProductDimension
+
+services:
+- name: bm-marketdimension
+  model: BmMarketDimension
+  resource: BmMarketDimensionResource
+- name: bm-productdimension
+  model: BmProductDimension
+  resource: BmProductDimensionResource
+
+functions:
+- name: BmMarketScopeHandler
+  create: NewBmMarketScopeHandler
+  daemons:
+  - BmMongodbDaemon
+  method: MarketScope
+  http: GET
+  args:
+  - name
+- name: BmProductCountHandler
+  create: NewBmProductCountHandler
+  daemons:
+  - BmMongodbDaemon
+  method: ProductCount
+  http: GET
+  args:
+  - name
+- name: BmMarketRatioHandler
+  create: NewBmMarketRatioHandler
+  daemons:
+  - BmMongodbDaemon
+  method: MarketRatio
+  http: GET
+  args:
+  - name
+- name: BmMaxPortionHandler
+  create: NewBmMaxPortionHandler
+  daemons:
+  - BmMongodbDaemon
+  method: MaxPortion
+  http: GET
+  args:
+  - name
+- name: BmMarketScopeTrendHandler
+  create: NewBmMarketScopeTrendHandler
+  daemons:
+  - BmMongodbDaemon
+  method: MarketScopeTrend
+  http: GET
+  args:
+  - name
+- name: BmProductPortionHandler
+  create: NewBmProductPortionHandler
+  daemons:
+  - BmMongodbDaemon
+  method: ProductPortion
+  http: GET
+  args:
+  - name
+- name: BmVolumeTrendHandler
+  create: NewBmVolumeTrendHandler
+  daemons:
+  - BmMongodbDaemon
+  method: VolumeTrend
+  http: GET
+  args:
+  - name
+- name: BmVolumeCmpHandler
+  create: NewBmVolumeCmpHandler
+  daemons:
+  - BmMongodbDaemon
+  method: VolumeCmp
+  http: GET
+  args:
+  - name
+- name: BmPortionTrendHandler
+  create: NewBmPortionTrendHandler
+  daemons:
+  - BmMongodbDaemon
+  method: PortionTrend
+  http: GET
+  args:
+  - name
+- name: BmPortionCmpHandler
+  create: NewBmPortionCmpHandler
+  daemons:
+  - BmMongodbDaemon
+  method: PortionCmp
+  http: GET
+  args:
+  - name
+
+middlewares:
+- name: BmCheckTokenMiddleware
+  create: NewCheckTokenMiddleware
+  daemons:
+  - BmRedisDaemon
+  args:
+  - 192.168.100.116:9096
+
+panic:
+  name: BmCommonPanicHandle
+  create: NewCommonPanicHandle
+
+daemons:
+- name: BmMongodbDaemon
+  method: NewMongoDBDaemon
+  args:
+    host: 192.168.100.174
+    port: 27017
+    database: pharbers-max-bi
+- name: BmRedisDaemon
+  method: NewRedisDBDaemon
+  args:
+    host: 192.168.100.174
+    port: 6379
+    password:
+    database: 0
